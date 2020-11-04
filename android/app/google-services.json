@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "334988621947",
+    "firebase_url": "https://shoutoutnotification.firebaseio.com",
+    "project_id": "shoutoutnotification",
+    "storage_bucket": "shoutoutnotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334988621947:android:4877f280f3e176fb630ade",
+        "android_client_info": {
+          "package_name": "com.wolfiz.shoutout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334988621947-s0s825ept5psf1dqlgr9vatspq9k14k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1TbDbAOiXSKU6XFqa-Z-UruYpScs3iA8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334988621947-s0s825ept5psf1dqlgr9vatspq9k14k8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
