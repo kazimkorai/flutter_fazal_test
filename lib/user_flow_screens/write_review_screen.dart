@@ -9,10 +9,11 @@ import 'package:flutter_fazal_test/const/ConstsVariable.dart';
 import 'package:flutter_fazal_test/user_flow_screens/home_screen.dart';
 import 'package:flutter_fazal_test/user_flow_screens/new_request_view.dart';
 import 'package:flutter_fazal_test/utils/dialog_custom.dart';
+import 'package:flutter_fazal_test/utils/genericMethods.dart';
 import 'package:flutter_fazal_test/utils/loading_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'inbox_screen.dart';
 import 'package:flutter_fazal_test/user_flow_screens/sub_categories.dart';
 import 'package:flutter_fazal_test/utils/custom_scaffold .dart';
 import 'package:flutter_fazal_test/utils/user_top_menu_with_btnback.dart';
@@ -45,6 +46,8 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    GenericClasses.WidgetScreen = HomeScreen();
+    GenericClasses.context = context;
     return WillPopScope(
       onWillPop: () {
 
@@ -98,7 +101,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                         child: RatingBar(
                           onRatingChanged: (rating) =>
                               setState(() => _rating = rating),
-                          initialRating: 5,
+                          initialRating: 3.5,
                           maxRating: 5,
                           filledIcon: Icons.star,
                           emptyIcon: Icons.star_border,
@@ -159,7 +162,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       "supplierid": supplierid,
       "requestid": requestid,
       'reviewtext':_textDesc.text,
-      "stars": _rating.toString()[0]+_rating.toString()[1]+_rating.toString()[2],
+      "stars": _rating.toDouble().toString(),
       // ${mystring[0]}
     }).then((response) {
       // print(response.statusCode);
@@ -171,10 +174,12 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
       if(status=='Review Submitted')
       {
         showDialog(context: context,builder: (BuildContext context){
-
-          return    CustomDialog.con('Hello '+ ConstantsVariable.userName+'!','Your Review has been sent successfully!','CONTINUE',HomeScreen());
+          return    CustomDialog.con('Hello '+ ConstantsVariable.userName+'!','Your Review has been sent successfully!','CONTINUE',InboxScreen());
 
       });
+      }
+      else{
+        print('error');
       }
 
     });

@@ -16,7 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login_screen.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_fazal_test/utils/genericMethods.dart';
 class ContactUsScreen extends StatefulWidget {
   @override
   _ContactUsScreen createState() => _ContactUsScreen();
@@ -63,6 +63,8 @@ class _ContactUsScreen extends State<ContactUsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    GenericClasses.WidgetScreen = HomeScreen();
+    GenericClasses.context = context;
     return WillPopScope(
       onWillPop: () {
         return Navigator.pushReplacement(
@@ -146,7 +148,7 @@ class _ContactUsScreen extends State<ContactUsScreen> {
                     ),
                     Container(
                       height: 50,
-                      margin: EdgeInsets.only(left: 20, right: 20, top: 18),
+                      margin: EdgeInsets.only(left: 20, right: 20, top: 18,bottom: 10),
                       width: MediaQuery.of(context).size.width,
                       child: RaisedButton(
                           child: Text(
@@ -159,7 +161,6 @@ class _ContactUsScreen extends State<ContactUsScreen> {
                               side: BorderSide(color: HexColor('#2B748D'))),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-
                               contactUs();
                             }
                           }),

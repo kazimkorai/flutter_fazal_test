@@ -2,29 +2,37 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fazal_test/shared_prefrence/my_sharedPrefrence.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter_fazal_test/const/ConstsVariable.dart';
 import 'package:flutter_fazal_test/pojo/login_datamodel/login_data_model.dart';
 import 'package:flutter_fazal_test/user_login_screens_flow/verify_phone_no_screen.dart';
 import 'package:flutter_fazal_test/utils/page_transition.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui';
 import 'forget_password_screen.dart';
 import 'login_screen.dart';
-
+import 'package:flutter_fazal_test/apis/ApiUrls.dart';
+import 'package:flutter_fazal_test/utils/dialog_custom.dart';
+import 'package:flutter_fazal_test/utils/loading_dialog.dart';
+import 'package:flutter_fazal_test/const/getx_variable.dart';
+import 'package:get/get.dart';
 class CreateNewAccountScreen extends StatefulWidget {
+
   @override
   _CreateNewAccountScreen createState() => _CreateNewAccountScreen();
 }
 
 class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
 
+  var controller=Get.put(GetXVariavleConteroller());
+
   final _formKey = GlobalKey<FormState>();
-  var _textName = TextEditingController();
-  var _textEmail = TextEditingController();
-  var _textPassword = TextEditingController();
+
   bool isErrorMask = true;
   bool isErrorName = false;
   bool isErrorEmail = false;
@@ -206,7 +214,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                 height: 50,
                 child: TextFormField(
 
-                  controller: _textName,
+                  controller: controller.textName.value,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).nextFocus(),
@@ -225,7 +233,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                       setState(() {
                         isErrorName= true;
                         hintErrorName = 'Invalid name entered';
-                        _textName.text = '';
+                        controller.textName.value.text = '';
                       });
                       //    _textEmail.text = 'Please Enter Email';
 
@@ -235,7 +243,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                       setState(() {
                         isErrorName = true;
                         hintErrorName = 'Maximum 20 character';
-                        _textName.text = '';
+                        controller.textName.value.text = '';
                       });
                       return '';
                     }
@@ -268,7 +276,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                 height: 50,
                 child: TextFormField(
                   keyboardType: TextInputType.emailAddress,
-                  controller: _textEmail,
+                  controller: controller.textEmail.value,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).nextFocus(),
@@ -287,7 +295,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                       setState(() {
                         isErrorEmail = true;
                         hintErrorEmail = 'Invalid email entered';
-                        _textEmail.text = '';
+                        controller.textEmail.value.text = '';
                       });
                       //    _textEmail.text = 'Please Enter Email';
 
@@ -297,7 +305,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                       setState(() {
                         isErrorEmail = true;
                         hintErrorEmail = 'Invalid email entered';
-                        _textEmail.text = '';
+                        controller.textEmail.value.text = '';
                       });
                       return '';
                     }
@@ -330,7 +338,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                 height: 50,
                 child: TextFormField(
                   obscureText: true,
-                  controller: _textPassword,
+                  controller: controller.textPassword.value,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) =>
                       FocusScope.of(context).nextFocus(),
@@ -349,7 +357,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                       setState(() {
                         isErrorPassword = true;
                         hintErrorPassword = 'Invalid password entered';
-                        _textPassword.text = '';
+                        controller.textPassword.value.text = '';
                       });
                       //    _textEmail.text = 'Please Enter Email';
                       return '';
@@ -359,7 +367,7 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
                       setState(() {
                         isErrorPassword = true;
                         hintErrorPassword = 'Must be six character';
-                        _textPassword.text = '';
+                        controller.textPassword.value.text = '';
                       });
                       return '';
                     }
@@ -403,16 +411,17 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
 
                       if (_formKey.currentState.validate()) {
 
-                        ConstantsVariable.name=_textName.text;
-                        ConstantsVariable.email=_textEmail.text;
-                        ConstantsVariable.password=_textPassword.text;
-                        MySharedPrefrence.setCreateAccountData(_textName.text, _textEmail.text, _textPassword.text);
+                        ConstantsVariable.name=controller.textName.value.text;
+                        ConstantsVariable.email=controller.textEmail.value.value.text;
+                        ConstantsVariable.password=controller.textPassword.value.text;
 
-                        return Navigator.pushReplacement(
-                            context,
-                            PageTransition(
-                                type: PageTransitionType.rightToLeft,
-                                child: VerifyPhoneNoScreen()));
+                        // controller.userName.value=_textName.text;
+                        // controller.userPassword.value=_textPassword.text;
+                        // controller.userEmail.value=_textEmail.text;
+
+                        MySharedPrefrence.setCreateAccountData(controller.textName.value.text, controller.textEmail.value.value.text, controller.textPassword.value.text);
+                        checkStatus(controller.textEmail.value.value.text);
+
                       }
                     }),
               ),
@@ -469,9 +478,33 @@ class _CreateNewAccountScreen extends State<CreateNewAccountScreen> {
     ) ;
   }
 
-  void initPref() async
-  {
+  Future<bool>  checkStatus(String email) async {
+    ShowLoadingDialog.showAlertDialog(context);
+    final response = await http.get(ApiUrls.urlCheckEmailExist+email );
+    var responceJson = json.decode(response.body);
 
+    print(responceJson.toString());
+    Navigator.pop(context);
+    if(responceJson['status'])
+      {
+        return Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: VerifyPhoneNoScreen()));
+      }
+    else
+      {
+        Fluttertoast.showToast(
+            msg: "Email already exist",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+      }
   }
 
 }

@@ -58,8 +58,7 @@ class _InboxScreenState extends State<InboxScreen> {
     GenericClasses.context = context;
     return WillPopScope(
       onWillPop: () {
-        return Navigator.pushReplacement(
-            context,
+        return Navigator.pushReplacement(context,
             PageTransition(
                 type: PageTransitionType.leftToRight, child: HomeScreen()));
       },
@@ -72,111 +71,11 @@ class _InboxScreenState extends State<InboxScreen> {
               future: fetchInbox(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  getBody(snapshot);
-                  return ListView.builder(
-                      itemCount: snapshot.data.length == null
-                          ? 0
-                          : snapshot.data.length,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                margin: EdgeInsets.only(
-                                    top: 10, left: 10, right: 150),
-                                child: Text(
-                                  snapshot.data[index]['jobdescription'],
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.questrial(
-                                      color: HexColor('#777777'), fontSize: 18),
-                                )),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin:
-                                      EdgeInsets.only(top: 10, left: 10),
-                                      child: Text(
-                                        snapshot.data[index]['jobcategory'],
-                                        style: GoogleFonts.questrial(
-                                            color: HexColor('#2B748D'),
-                                            fontSize: 18),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin:
-                                      EdgeInsets.only(top: 10, left: 10),
-                                      child: Text(
-                                        snapshot.data[index]['jobdate'],
-                                        style: GoogleFonts.questrial(
-                                            color: HexColor('#2B748D'),
-                                            fontSize: 18),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      snapshot.data[index]['status'],
-                                      style: GoogleFonts.questrial(
-                                          color: HexColor('#000000'),
-                                          fontSize: 12),
-                                    ),
-                                    Container(
-                                        margin: EdgeInsets.only(top: 7),
-                                        child: Text(
-                                          snapshot.data[index]
-                                          ['interestedsuppliers'] +
-                                              " Interested ",
-                                          style: GoogleFonts.questrial(
-                                              color: HexColor('#000000'),
-                                              fontSize: 12),
-                                        )),
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 5, top: 10, right: 6),
-                                      height: 28,
-                                      child: RaisedButton(
-                                          child: Text(
-                                            'View Suppliers',
-                                            style: GoogleFonts.josefinSans(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          color: HexColor('#2B748D'),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                              BorderRadius.circular(25.0),
-                                              side: BorderSide(
-                                                  color: HexColor('#2B748D'))),
-                                          onPressed: () {
-                                            {
-                                              String requestid= snapshot.data[index]['requestid'];
-                                              Navigator.push(context, new MaterialPageRoute(builder: (context) => new NewRequestForJob(requestid)));
-                                              //
-
-                                            }
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Divider(
-                              color: HexColor('#B1B1B1'),
-                            )
-                          ],
-                        );
-                      });
+                return  getBody(snapshot);
 
 
-                } else {
+                }
+                else {
                   return Center(child: CircularProgressIndicator());
                 }
               },
@@ -191,11 +90,110 @@ class _InboxScreenState extends State<InboxScreen> {
   {
     if(listIems.length>0)
       {
+      return  ListView.builder(
+            itemCount: snapshot.data.length == null
+                ? 0
+                : snapshot.data.length,
+            itemBuilder: (BuildContext ctxt, int index) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(
+                          top: 10, left: 10, right: 150),
+                      child: Text(
+                        snapshot.data[index]['jobdescription'],
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.questrial(
+                            color: HexColor('#777777'), fontSize: 18),
+                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin:
+                            EdgeInsets.only(top: 10, left: 10),
+                            child: Text(
+                              snapshot.data[index]['jobcategory'],
+                              style: GoogleFonts.questrial(
+                                  color: HexColor('#2B748D'),
+                                  fontSize: 18),
+                            ),
+                          ),
+                          Container(
+                            margin:
+                            EdgeInsets.only(top: 10, left: 10),
+                            child: Text(
+                              snapshot.data[index]['jobdate'],
+                              style: GoogleFonts.questrial(
+                                  color: HexColor('#2B748D'),
+                                  fontSize: 18),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            snapshot.data[index]['status'],
+                            style: GoogleFonts.questrial(
+                                color: HexColor('#000000'),
+                                fontSize: 12),
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(top: 7),
+                              child: Text(
+                                snapshot.data[index]
+                                ['interestedsuppliers'] +
+                                    " Available",
+                                style: GoogleFonts.questrial(
+                                    color: HexColor('#000000'),
+                                    fontSize: 12),
+                              )),
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 5, top: 10, right: 6),
+                            height: 28,
+                            child: RaisedButton(
+                                child: Text(
+                                  'View Suppliers',
+                                  style: GoogleFonts.josefinSans(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                color: HexColor('#2B748D'),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(25.0),
+                                    side: BorderSide(
+                                        color: HexColor('#2B748D'))),
+                                onPressed: () {
+                                  {
+                                    String requestid= snapshot.data[index]['requestid'];
+                                    Navigator.push(context, new MaterialPageRoute(builder: (context) => new NewRequestForJob(requestid)));
+                                    //
 
+                                  }
+                                }),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    color: HexColor('#B1B1B1'),
+                  )
+                ],
+              );
+            });
       }
-    else
-      {
-        return Center(child: Text('No records found'),);
-      }
+    else{
+      return Center(child: Text('No records found'),);
+    }
   }
 }

@@ -10,6 +10,7 @@ import 'package:flutter_fazal_test/apis/ApiUrls.dart';
 import 'package:flutter_fazal_test/shared_prefrence/my_sharedPrefrence.dart';
 import 'package:flutter_fazal_test/user_flow_screens/listing_screen.dart';
 import 'package:flutter_fazal_test/utils/loading_dialog.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_fazal_test/const/ConstsVariable.dart';
@@ -23,6 +24,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:get/get.dart';
+import 'package:flutter_fazal_test/controller/controller_home_cat.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -30,6 +33,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   SharedPreferences prefs;
   TextEditingController _searchingController = TextEditingController();
   List<dynamic> listSearched = List();
@@ -37,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String _searchText;
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _searchingController.dispose();
   }
@@ -201,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (responceJson['subcat'] != 0) {
       print(responceJson['subcat']);
       ConstantsVariable.idForSub = catId;
+
       Navigator.pushReplacement(
           context,
           PageTransition(
@@ -210,18 +214,38 @@ class _HomeScreenState extends State<HomeScreen> {
       print(responceJson['subcat']);
       ConstantsVariable.idForSub = catId;
       ConstantsVariable.subCatList = await responceJson['response'];
-      Navigator.pushReplacement(
-          context,
-          PageTransition(
-              type: PageTransitionType.rightToLeft,
-              child: ListingScreen(catName)));
+
+      if(ConstantsVariable.subCatList.length>0)
+        {
+          Navigator.pushReplacement(
+              context,
+              PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: ListingScreen(catName)));
+        }
+      else{
+        Navigator.pop(context);
+        print('Not found');
+        Fluttertoast.showToast(
+            msg: "Subcategory not found ",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+
+      }
     }
   }
 
   Future<List<dynamic>> fetchHomeCatg() async {
-    if (ConstantsVariable.catList.length > 0) {
-      return ConstantsVariable.catList;
-    }
+    print("here");
+    if(ConstantsVariable.catList.length>0)
+      {
+        return ConstantsVariable.catList;
+      }
     final response = await http.get(ApiUrls.BASE_API_URL + 'homecategories');
     var responceJson = json.decode(response.body);
     if (responceJson['status']) {
@@ -297,9 +321,9 @@ class _HomeScreenState extends State<HomeScreen> {
   {
     if(ConstantsVariable.catList.length>0)
       {
-        return ListView.builder(
+        return   ListView.builder(
             padding: EdgeInsets.only(bottom: 15),
-            itemCount: ConstantsVariable.catList == null
+            itemCount: ConstantsVariable.catList.length == null
                 ? 0
                 : ConstantsVariable.catList.length,
             itemBuilder: (context, index) {

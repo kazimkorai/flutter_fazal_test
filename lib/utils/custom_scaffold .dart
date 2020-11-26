@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fazal_test/apis/ApiUrls.dart';
 import 'package:flutter_fazal_test/const/ConstsVariable.dart';
 import 'package:flutter_fazal_test/shared_prefrence/my_sharedPrefrence.dart';
 import 'package:flutter_fazal_test/user_flow_screens/edit_establishment_screen.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_fazal_test/supllier_flow/buy_credits_screen.dart';
 import 'package:flutter_fazal_test/supllier_flow/supplier_new_requests_screen.dart';
@@ -34,94 +36,97 @@ import 'package:http/http.dart' as http;
 class MyCustomScaffold {
   static BuildContext _context;
   static Widget inboxSupplierWidget;
+
   static Widget getDrawer(BuildContext context) {
     _context = context;
     return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 45),
+      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 40),
       child: Drawer(
         child: Container(
           color: HexColor('#454547'),
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
-              Stack(children: [Align(child: Container(
-                margin: EdgeInsets.only(right: 10, top: 20),
-                child: getCredits(),
-              ),alignment: Alignment.topRight,),
-                Row(
-                  children: [
-                    Container(
-                      width: 65.0,
-                      height: 65.0,
-                      margin: EdgeInsets.only(left: 10),
-                      child: CachedNetworkImage(
-                        imageUrl: ConstantsVariable.profileImage,
-                        imageBuilder: (context, imageProvider) => Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.cover),
+              Stack(
+                children: [
+                  Align(
+                    child: Container(
+                      margin: EdgeInsets.only(right: 10, top: 20),
+                      child: getCredits(),
+                    ),
+                    alignment: Alignment.topRight,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 65.0,
+                        height: 65.0,
+                        margin: EdgeInsets.only(left: 10),
+                        child: CachedNetworkImage(
+                          imageUrl: ConstantsVariable.profileImage,
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 65.0,
+                            height: 65.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
                           ),
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
                         ),
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(left: 14, top: 40),
-                              child: Text(
-                                ConstantsVariable.userName,
-                                style: GoogleFonts.josefinSans(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 14, top: 40),
+                                child: Text(
+                                  ConstantsVariable.userName,
+                                  style: GoogleFonts.josefinSans(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-
-                        Container(
-                          margin: EdgeInsets.only(left: 14, top: 5),
-                          child: RaisedButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      child: EditProfileScreen()));
-                            },
-                            color: Colors.white,
-                            child: Text(
-                              'Edit Profile',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                side: BorderSide(color: Colors.grey)),
+                            ],
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                        )
-                      ],
-                    ),
-
-                    Row(
-                      children: [
-
-                      ],
-                    )
-                  ],
-                ),
-              ],),
-
+                          Container(
+                            margin: EdgeInsets.only(left: 14, top: 5),
+                            child: RaisedButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.rightToLeft,
+                                        child: EditProfileScreen()));
+                              },
+                              color: Colors.white,
+                              child: Text(
+                                'Edit Profile',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  side: BorderSide(color: Colors.grey)),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [],
+                      )
+                    ],
+                  ),
+                ],
+              ),
 
               Divider(
                 color: Colors.white,
@@ -147,7 +152,7 @@ class MyCustomScaffold {
               InkWell(
                 onTap: () async {
                   SharedPreferences sharedPrefrence =
-                  await SharedPreferences.getInstance();
+                      await SharedPreferences.getInstance();
                   print(sharedPrefrence.get('isSupplier').toString());
                   print(sharedPrefrence.get('userid').toString());
                   String is_supplier =
@@ -163,6 +168,9 @@ class MyCustomScaffold {
                               RegisterEstablishmentScreen());
                         });
                   } else if (is_supplier == '1') {
+                    ShowLoadingDialog.showAlertDialog(context);
+                    fetchDropDown();
+                    Navigator.pop(context);
                     return Navigator.pushReplacement(
                         _context,
                         PageTransition(
@@ -200,9 +208,10 @@ class MyCustomScaffold {
                   ),
                 ),
               ),
-               getWidgetForIsSupplier(context,ConstantsVariable.isSupplier),
+              getWidgetForIsSupplier(context, ConstantsVariable.isSupplier),
               InkWell(
                 onTap: () {
+                  ConstantsVariable.isTabIndexNewForCust=true;
                   Navigator.pushReplacement(
                       context,
                       PageTransition(
@@ -298,27 +307,31 @@ class MyCustomScaffold {
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: BuyCreditsScreen()));
-                },
-                child: Container(
-                  margin: EdgeInsets.only(left: 8, top: 20),
-                  child: Text(
-                    'Buy Credits',
-                    style: GoogleFonts.josefinSans(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+              ConstantsVariable.isSupplier == "1"
+                  ? InkWell(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: BuyCreditsScreen()));
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 8, top: 20),
+                        child: Text(
+                          'Buy Credits',
+                          style: GoogleFonts.josefinSans(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 1,
+                    ),
               Container(
-                margin: EdgeInsets.only(left: 8, top: 70),
+                margin: EdgeInsets.only(left: 8, top: 50),
                 child: InkWell(
                   onTap: () {
                     showDialog(
@@ -338,20 +351,8 @@ class MyCustomScaffold {
               ),
               InkWell(
                 onTap: () async {
-                  ShowLoadingDialog.showAlertDialog(context);
-                  SharedPreferences pref = await SharedPreferences.getInstance();
-                  pref.clear();
-                  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                  String userid = sharedPreferences.get('userid');
-                  final response = await http.get('https://shoutout.arcticapps.dev/admin/api/logout?userid=${userid}');
-                  var responceJson = json.decode(response.body);
-                  Navigator.pop(context);
-                  print(responceJson);
-                  Navigator.pushReplacement(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: MyAppSplash()));
+
+                  showAlertDialog(context);
                 },
                 child: Container(
                   margin: EdgeInsets.only(left: 8, top: 20, bottom: 20),
@@ -370,6 +371,64 @@ class MyCustomScaffold {
       ),
     );
   }
+
+
+
+ static showAlertDialog(BuildContext context) async {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed:  () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Continue"),
+      onPressed:  () async {
+        Navigator.pop(context);
+        ShowLoadingDialog.showAlertDialog(context);
+        SharedPreferences pref =
+            await SharedPreferences.getInstance();
+        pref.clear();
+        ConstantsVariable.catList.clear();
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        String userid = sharedPreferences.get('userid');
+        final response = await http.get(
+            'https://shoutout.arcticapps.dev/admin/api/logout?userid=${userid}');
+        var responceJson = json.decode(response.body);
+        Navigator.pop(context);
+        print(responceJson);
+        Navigator.pushReplacement(
+            context,
+            PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: MyAppSplash()));
+
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("AlertDialog"),
+      content: Text("Would you like to Log out?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+
 
   userEstablishment() async {
     SharedPreferences sharedPrefrence = await SharedPreferences.getInstance();
@@ -400,58 +459,83 @@ class MyCustomScaffold {
     });
   }
 
-
-static  getWidgetForIsSupplier(BuildContext context,String isSupplier)
-  {
-    if(isSupplier=='1')
-      {
-        return  InkWell(
-          onTap: () {
-            Navigator.pushReplacement(
-                context,
-                PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    child: SupplierNewRequestScreen()));
-          },
-          child: Container(
-            margin: EdgeInsets.only(left: 8, top: 20),
-            child: Text(
-              'Supplier Inbox',
-              style: GoogleFonts.josefinSans(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            ),
+  static getWidgetBuyCredits(BuildContext context, String isSupplier) {
+    if (isSupplier == '1') {
+      return InkWell(
+        onTap: () {
+          Navigator.pushReplacement(
+              context,
+              PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: BuyCreditsScreen()));
+        },
+        child: Container(
+          margin: EdgeInsets.only(left: 8, top: 20),
+          child: Text(
+            'Buy Credits',
+            style: GoogleFonts.josefinSans(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
-        );
-      }
-    else{
+        ),
+      );
+    } else {
+      return SizedBox(
+        height: 1,
+      );
+    }
+  }
 
+  static getWidgetForIsSupplier(BuildContext context, String isSupplier) {
+    if (isSupplier == '1') {
+      return InkWell(
+        onTap: () {
+          ConstantsVariable.isTabIndexNew = true;
+          Navigator.pushReplacement(
+              context,
+              PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: SupplierNewRequestScreen()));
+        },
+        child: Container(
+          margin: EdgeInsets.only(left: 8, top: 20),
+          child: Text(
+            'Supplier Inbox',
+            style: GoogleFonts.josefinSans(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    } else {
       return Text('');
     }
   }
 
-
-
-static getCredits()
-  {
-
-    if(ConstantsVariable.isSupplier=='1')
-      {
-        ConstantsVariable.InboxTittle='Customer Inbox';
-        return Text(
-          ConstantsVariable.credits.toString()+' CR',
-          style: GoogleFonts.josefinSans(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold),
-        );
-      }
-    else{
-      ConstantsVariable.InboxTittle='Inbox';
+  static getCredits() {
+    if (ConstantsVariable.isSupplier == '1') {
+      ConstantsVariable.InboxTittle = 'Customer Inbox';
+      return Text(
+        ConstantsVariable.credits.toString() + ' CR',
+        style: GoogleFonts.josefinSans(
+            color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+      );
+    } else {
+      ConstantsVariable.InboxTittle = 'Inbox';
       Text('');
     }
   }
 
+  static Future fetchDropDown() async {
+    final response = await http.get(ApiUrls.BASE_API_URL + 'getdropdownapi');
+    var responceJson = json.decode(response.body);
+    if (responceJson['status']) {
+      ConstantsVariable.dropDownListRegionUpdateEstablish =
+          responceJson['region'];
+      ConstantsVariable.dropDownListCatUpdateEstablish =
+          responceJson['categories'];
 
+      return ConstantsVariable.dropDownListCatUpdateEstablish;
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
 }

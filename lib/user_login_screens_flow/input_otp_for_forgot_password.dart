@@ -184,6 +184,15 @@ class _InputOtpScreen extends State<InputOtpForgotPasswordScreen> {
                               child: UpdatePasswordScreen()));
                     } else {
                       print('Otp Not match');
+                      Fluttertoast.showToast(
+                          msg: "You enter invalid OTP",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
                     }
                   }),
             ),

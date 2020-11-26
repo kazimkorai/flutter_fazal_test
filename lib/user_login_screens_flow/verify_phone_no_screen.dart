@@ -18,17 +18,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'input_otp_for_forgot_password.dart';
 import 'input_otp_screen.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_fazal_test/const/getx_variable.dart';
+import 'package:get/get.dart';
 class VerifyPhoneNoScreen extends StatefulWidget {
+
+
   @override
   _VerifyPhoneNoScreen createState() => _VerifyPhoneNoScreen();
 }
 
 class _VerifyPhoneNoScreen extends State<VerifyPhoneNoScreen> {
+  var controller=Get.put(GetXVariavleConteroller());
   bool isErrorPhone = false;
   String hintErrorPhone = '289 92920 00';
   String countryDialer = '+27';
-  TextEditingController _textEditingControllerPhone=TextEditingController();
+
   Color errorColorforPhone(bool isError) {
     if (isError) {
       return Colors.red;
@@ -144,16 +148,18 @@ class _VerifyPhoneNoScreen extends State<VerifyPhoneNoScreen> {
                         margin: EdgeInsets.only(left: 2),
                         child: CountryCodePicker(
                           onInit: (code) => print(
-                              "on init ${code.name} ${code.dialCode} ${code.name}"),
+                            controller.defualtDialerCode.value=code.code
+                              ),
                           flagWidth: 24,
                           onChanged: (code) {
                             setState(() {
+                              controller.defualtDialerCode.value=code.code;
                               countryDialer = code.dialCode;
                               print('**fromOnchanged==>' + countryDialer);
                             });
                           },
                           // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                          initialSelection: 'ZA',
+                          initialSelection: controller.defualtDialerCode.value,
                           favorite: ['+39', 'FR'],
                           // optional. Shows only country name and flag
                           showCountryOnly: false,
@@ -180,13 +186,13 @@ class _VerifyPhoneNoScreen extends State<VerifyPhoneNoScreen> {
                                   setState(() {
                                     isErrorPhone = true;
                                     hintErrorPhone = 'Invalid phone entered';
-                                    _textEditingControllerPhone.text = '';
+                                    controller.textEditingControllerPhone.value.text = '';
                                   });
                                   return '';
                                 }
                                 return null;
                               },
-                              controller: _textEditingControllerPhone,
+                              controller: controller.textEditingControllerPhone.value,
 
 
                               onEditingComplete: (){
@@ -228,7 +234,8 @@ class _VerifyPhoneNoScreen extends State<VerifyPhoneNoScreen> {
                           side: BorderSide(color: HexColor('#2B748D'))),
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          ConstantsVariable.phone = countryDialer+_textEditingControllerPhone.text.toString();
+                          ConstantsVariable.phone = countryDialer+controller.textEditingControllerPhone.value.text;
+
                           getOtp('+923165199609');
                         }
                       }),

@@ -157,6 +157,8 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
                   //         child: SingleEstablishmentScreen()));
                 },
                 child: Container(
+                  height: 300,
+                  width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(
                       left: 12, right: 12, bottom: 15),
                   child: Stack(
@@ -208,19 +210,19 @@ class _SubCategoryScreenState extends State<SubCategoryScreen> {
             });
       }
     else{
-      Center(child: Text('No records found'),);
+      Container(height:200,width: 200,child: Center(child: Text('No records found'),));
     }
   }
   Widget _buildListView() {
     if (!_isSearching) {
 
-      return  Flexible(
+      return  Expanded(
         flex: 10,
         child:getBody(),
       );
     }
     else{
-      return  Flexible(
+      return  Expanded(
         flex: 10,
         child: ListView.builder(
             itemCount:listSearched.length == null

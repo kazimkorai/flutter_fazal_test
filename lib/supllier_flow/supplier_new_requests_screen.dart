@@ -23,9 +23,12 @@ import 'package:flutter_fazal_test/utils/user_top_menu_with_btnback.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:rating_bar/rating_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_fazal_test/const/ConstsVariable.dart';
 class SupplierNewRequestScreen extends StatefulWidget {
+
+
   @override
   _SupplierNewRequestScreenState createState() =>
       _SupplierNewRequestScreenState();
@@ -40,11 +43,10 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
   HexColor fontFirst = HexColor('ffffff');
   HexColor bgColorSecond = HexColor('ffffff');
   HexColor fontSecond = HexColor('##464646');
-  bool isNewRequestSelected = false;
   List listAccepted = List();
   List listNewReq = List();
   String requestid;
-
+  bool isNewRequestSelected=true;
   getSelectedTabColor(bool isNewRequestSelected) {
     if (isNewRequestSelected) {
       setState(() {
@@ -64,8 +66,31 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
   @override
   void initState() {
     super.initState();
+    if(ConstantsVariable.isTabIndexNew)
+    {
+      onPressedNewReq();
+    }
+    else
+      {
+        onPressedAcceptedReq();
+      }
+    setState(() {
+     // wisNewRequestSelected = true;
+    });
+  }
+
+  void onPressedNewReq () {
     setState(() {
       isNewRequestSelected = true;
+      getSelectedTabColor( isNewRequestSelected);
+      ConstantsVariable.isTabIndexNew=true;
+    });
+  }
+  void onPressedAcceptedReq() {
+    setState(() {
+      isNewRequestSelected = false;
+      getSelectedTabColor( isNewRequestSelected);
+      ConstantsVariable.isTabIndexNew=false;
     });
   }
 
@@ -115,12 +140,7 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                               height: 60,
                               child: RaisedButton(
                                 color: bgColorFirst,
-                                onPressed: () {
-                                  setState(() {
-                                    isNewRequestSelected = true;
-                                    getSelectedTabColor(isNewRequestSelected);
-                                  });
-                                },
+                                onPressed: onPressedNewReq,
                                 child: Text(
                                   'New Request',
                                   style: TextStyle(color: fontFirst),
@@ -135,12 +155,7 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                               height: 60,
                               child: RaisedButton(
                                 color: bgColorSecond,
-                                onPressed: () {
-                                  setState(() {
-                                    isNewRequestSelected = false;
-                                    getSelectedTabColor(isNewRequestSelected);
-                                  });
-                                },
+                                onPressed: onPressedAcceptedReq,
                                 child: Text(
                                   'Accepted Requests',
                                   style: TextStyle(color: fontSecond),
@@ -157,7 +172,7 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                             future: fetchingNewReq(),
                             builder: (BuildContext context, AsyncSnapshot snapshot) {
                               if (snapshot.hasData) {
-                                return getList(isNewRequestSelected);
+                                return getList(  isNewRequestSelected);
                               }
                               else {
                                 return Center(child: CircularProgressIndicator());
@@ -184,6 +199,7 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
               itemBuilder: (BuildContext ctxt, int index) {
                 return GestureDetector(
                   onTap: () {
+                    ConstantsVariable.isTabIndexNew=true;
                     requestid=listAccepted[index]['requestid'];
                     Navigator.push(context, new MaterialPageRoute(builder: (context) => new NewRequestViewScreenSupplier(requestid)));
                   },
@@ -191,6 +207,14 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Align(
+                     alignment: Alignment.centerRight,
+                        child: Text(listNewReq[index]['status']??"",
+                            style: GoogleFonts.raleway(
+                                color: HexColor('#2B748D'),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold)),
+                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,24 +223,22 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                             flex: 10,
                             child: Container(
                                 margin: EdgeInsets.only(top: 15, left: 10),
-                                child: Text(
-                                  listNewReq[index]['requestdescription'],
+                                child: ReadMoreText(
+                                  listNewReq[index]['requestdescription']??"",
+                                  trimLines: 3,
+                                  colorClickableText: Colors.pink,
+                                  trimMode: TrimMode.Line,
+                                  trimCollapsedText: '...Show more',
+                                  trimExpandedText: ' show less',
                                   style:
                                   GoogleFonts.questrial(color: HexColor('#777777'),
                                       fontSize: 18),
-                                )),
-                          ),
-                          Flexible(
-                            flex: 4,
-                            child: Container(
-                              margin: EdgeInsets.only(bottom: 5, right: 8,top: 5),
-                              child: Text(listNewReq[index]['status'],
-                                  style: GoogleFonts.raleway(
-                                      color: HexColor('#2B748D'),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold)),
+                                )
+
+
                             ),
-                          )
+                          ),
+
                         ],
                       ),
                       Row(
@@ -226,7 +248,7 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                           Container(
                             margin: EdgeInsets.only(top: 25, left: 10),
                             child: Text(
-                              listNewReq[index]['sentrequestdate'],
+                              listNewReq[index]['sentrequestdate']??"",
                               style: GoogleFonts.questrial(
                                   color: HexColor('#2B748D'), fontSize: 16),
                             ),
@@ -280,13 +302,21 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                return GestureDetector(onTap: () {
 
                  requestid=listAccepted[index]['requestid'];
-
+                 ConstantsVariable.isTabIndexNew=false;
                  Navigator.push(context, new MaterialPageRoute(builder: (context) => new NewRequestViewScreenSupplier(requestid)));
                }
-                 , child: Column(
+                 , child:  Column(
                    mainAxisAlignment: MainAxisAlignment.start,
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
+                     Align(
+                       alignment: Alignment.centerRight,
+                       child: Text(listAccepted[index]['status'],
+                           style: GoogleFonts.raleway(
+                               color: HexColor('#2B748D'),
+                               fontSize: 12,
+                               fontWeight: FontWeight.bold)),
+                     ),
                      Row(
                        crossAxisAlignment: CrossAxisAlignment.start,
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -294,28 +324,23 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                          Flexible(
                            flex: 10,
                            child: Container(
-                             margin: EdgeInsets.only(
-                                 bottom: 5, right: 10, left: 10,top: 8),
-                             child: Text(
-                               listAccepted[index]['requestdescription'],
+                               margin: EdgeInsets.only(top: 15, left: 10),
+                               child: ReadMoreText(
+                                 listAccepted[index]['requestdescription'],
+                                 trimLines: 3,
+                                 colorClickableText: Colors.pink,
+                                 trimMode: TrimMode.Line,
+                                 trimCollapsedText: '...Show more',
+                                 trimExpandedText: ' show less',
+                                 style:
+                                 GoogleFonts.questrial(color: HexColor('#777777'),
+                                     fontSize: 18),
+                               )
 
-                               style:
-                               GoogleFonts.questrial(
-                                   color: HexColor('#777777'), fontSize: 18),
-                             ),
+
                            ),
                          ),
-                         Flexible(
-                           flex: 4,
-                           child: Container(
-                             margin: EdgeInsets.only(bottom: 5, right: 8,top: 4),
-                             child: Text(listAccepted[index]['status'],
-                                 style: GoogleFonts.raleway(
-                                     color: HexColor('#2B748D'),
-                                     fontSize: 12,
-                                     fontWeight: FontWeight.bold)),
-                           ),
-                         )
+
                        ],
                      ),
                      Row(
@@ -348,9 +373,7 @@ class _SupplierNewRequestScreenState extends State<SupplierNewRequestScreen> {
                                onPressed: () {
                                  {
                                    requestid=listAccepted[index]['requestid'];
-
                                    Navigator.push(context, new MaterialPageRoute(builder: (context) => new NewRequestViewScreenSupplier(requestid)));
-
                                  }
                                }),
                          )

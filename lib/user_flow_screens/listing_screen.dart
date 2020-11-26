@@ -142,28 +142,7 @@ class _ListingScreenState extends State<ListingScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Container(
-                            child: CachedNetworkImage(
-                              imageUrl:listResponce[index]
-                              ['establishmentimage'],
-                              imageBuilder:
-                                  (context, imageProvider) =>
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.fill),
-                                    ),
-                                  ),
-                              // placeholder: (context, url) =>
-                              //     CircularProgressIndicator(),
-                              errorWidget:
-                                  (context, url, error) =>
-                                  Icon(Icons.error),
-                            ),
-                            margin: EdgeInsets.only(top: 10, left: 10, right: 10),
-                            height: 220,
-                          ),
+                        getImage(index),
 
                           Container(
                             margin: EdgeInsets.only(top: 10, right: 15, left: 17),
@@ -330,6 +309,40 @@ class _ListingScreenState extends State<ListingScreen> {
 
 
   }
+
+ Widget getImage(int index)
+ {
+ if(listResponce[index]['establishmentimage']!=null)
+
+ {
+   return   Container(
+     child: CachedNetworkImage(
+       imageUrl:listResponce[index]
+       ['establishmentimage'],
+       imageBuilder:
+           (context, imageProvider) =>
+           Container(
+             decoration: BoxDecoration(
+               image: DecorationImage(
+                   image: imageProvider,
+                   fit: BoxFit.fill),
+             ),
+           ),
+       // placeholder: (context, url) =>
+       //     CircularProgressIndicator(),
+       errorWidget:
+           (context, url, error) =>
+           Icon(Icons.error),
+     ),
+     margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+     height: 220,
+   );
+
+ }
+ else{
+   return Container(height: 200,width: 200,child: Center(child: Text('No image'),),);
+ }
+ }
 
 
   Future<List<dynamic>> fetchSubCat(String catId) async {

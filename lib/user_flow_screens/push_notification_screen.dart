@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fazal_test/const/getx_variable.dart';
 import 'package:flutter_fazal_test/supllier_flow/awarded_request_view_supplier.dart';
 import 'package:flutter_fazal_test/supllier_flow/supplier_new_requests_screen.dart';
 import 'package:flutter_fazal_test/user_flow_screens/inbox_screen.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_fazal_test/user_flow_screens/new_request_view.dart';
 import 'package:flutter_fazal_test/utils/genericMethods.dart';
 import 'package:flutter_fazal_test/utils/loading_dialog.dart';
 import 'package:flutter_fazal_test/utils/page_transition.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_fazal_test/utils/custom_scaffold .dart';
@@ -31,12 +33,14 @@ class _PushNotificationScreenState extends State<PushNotificationScreen> {
   @override
   void initState() {
     super.initState();
+
   }
 
   @override
   Widget build(BuildContext context) {
     GenericClasses.WidgetScreen = HomeScreen();
     GenericClasses.context = context;
+
     return WillPopScope(
       onWillPop: () {
         return Navigator.pushReplacement(

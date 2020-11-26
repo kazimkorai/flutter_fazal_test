@@ -121,6 +121,7 @@ class _RequestSupplierState extends State<RequestSupplier> {
                         margin: EdgeInsets.only(left: 10, right: 10, top: 10),
                         child: TextFormField(
                             controller: _textBudget,
+                            keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Budget Required';
@@ -166,8 +167,7 @@ class _RequestSupplierState extends State<RequestSupplier> {
                                     BorderRadius.all(Radius.circular(5)),
                                 borderSide: BorderSide(
                                     width: 1, color: HexColor("#B1B1B1")),
-                              ),
-                              hintText: 'Budget',
+                              ), hintText: r"Budget ($)",
                               fillColor: HexColor('#B1B1B1'),
                             )),
                       ),

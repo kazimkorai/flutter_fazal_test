@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:flutter_fazal_test/controller/controller_home_cat.dart';
 import 'dart:io';
-
+import 'package:flutter_fazal_test/controller/controller_home_cat.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_fazal_test/const/getx_variable.dart';
 import 'package:flutter_fazal_test/user_flow_screens/edit_establishment_screen.dart';
 import 'package:flutter_fazal_test/user_flow_screens/edit_profile_screen.dart';
 import 'package:flutter_fazal_test/user_flow_screens/fazal_test_form.dart';
@@ -23,13 +25,16 @@ import 'package:flutter_fazal_test/user_login_screens_flow/splash_screen.dart';
 import 'package:flutter_fazal_test/user_login_screens_flow/verify_phone_no_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'apis/ApiUrls.dart';
 import 'const/ConstsVariable.dart';
 import 'fazal_work/test_multipleImage.dart';
 
 void main() {
   runApp(MyApp());
 }
+var controller=Get.put(GetXVariavleConteroller());
 
 class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> navigatorKey =
@@ -73,6 +78,7 @@ class _MyAppSplashState extends State<MyAppSplash> with TickerProviderStateMixin
 
   @override
   void initState() {
+
     checkNotification();
     checkLogoutState();
     _controller = AnimationController(
@@ -109,7 +115,7 @@ class _MyAppSplashState extends State<MyAppSplash> with TickerProviderStateMixin
       ConstantsVariable.aboutUs = pref.getString('about');
       ConstantsVariable.videourlWelcome = pref.getString('welcomevideo');
       ConstantsVariable.videourlAbout = pref.getString('aboutvideo');
-      print('*welcomevideo' + ConstantsVariable.videourlWelcome);
+      print('*welcomevideo' + ConstantsVariable.videourlWelcome.toString());
 
       new Future.delayed(
           const Duration(seconds: 4),
@@ -171,19 +177,27 @@ class _MyAppSplashState extends State<MyAppSplash> with TickerProviderStateMixin
 
   void checkNotification() async {
     await Firebase.initializeApp();
+
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
     _firebaseMessaging.requestNotificationPermissions(
       const IosNotificationSettings(sound: true, badge: true, alert: true),
+
     );
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
+
+      controller.setCount();
+
         showLocalNotification(message['notification']['title'],message['notification']['body']);
       },
 
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+
+          controller.setCount();
+
         MyApp.navigatorKey.currentState
             .push(MaterialPageRoute(builder: (_) => PushNotificationScreen()));
       },
@@ -191,6 +205,9 @@ class _MyAppSplashState extends State<MyAppSplash> with TickerProviderStateMixin
         try {
           print(message.toString());
           print("onResume: $message");
+
+            controller.setCount();
+
           MyApp.navigatorKey.currentState
               .push(
               MaterialPageRoute(builder: (_) => PushNotificationScreen()));
@@ -200,10 +217,6 @@ class _MyAppSplashState extends State<MyAppSplash> with TickerProviderStateMixin
         }
       },
     );
-  }
-
-  Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-
   }
 
 }

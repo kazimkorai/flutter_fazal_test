@@ -28,6 +28,7 @@ class _WebViewClassState extends State<ShopCreditWebView> {
       ),
       body: WebView(
         initialUrl: url,
+        javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
         },

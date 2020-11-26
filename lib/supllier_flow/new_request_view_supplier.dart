@@ -13,7 +13,7 @@ import 'package:flutter_fazal_test/utils/loading_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-
+import 'package:flutter_fazal_test/utils/genericMethods.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_fazal_test/user_flow_screens/sub_categories.dart';
 import 'package:flutter_fazal_test/utils/custom_scaffold .dart';
@@ -21,11 +21,11 @@ import 'package:flutter_fazal_test/utils/page_transition.dart';
 import 'package:flutter_fazal_test/utils/user_top_menu.dart';
 import 'package:flutter_fazal_test/utils/user_top_menu_with_btnback.dart';
 import 'package:rating_bar/rating_bar.dart';
-
+import 'package:flutter_fazal_test/utils/genericMethods.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
+import 'package:flutter_fazal_test/const/ConstsVariable.dart';
 class NewRequestViewScreenSupplier extends StatefulWidget {
   NewRequestViewScreenSupplier(this.requestid);
 
@@ -37,11 +37,12 @@ class NewRequestViewScreenSupplier extends StatefulWidget {
       _NewRequestViewScreenSupplierState(requestid);
 }
 
-class _NewRequestViewScreenSupplierState
-    extends State<NewRequestViewScreenSupplier> {
+class _NewRequestViewScreenSupplierState extends State<NewRequestViewScreenSupplier> {
   _NewRequestViewScreenSupplierState(this.requestid);
 
   final String requestid;
+
+
 
   String titleText = '';
   String btnTittle = '';
@@ -70,6 +71,7 @@ class _NewRequestViewScreenSupplierState
         _textName.text = responceJson['data']['customername'];
         _textPhone.text = responceJson['data']['customerphone'];
         _textEmail.text = responceJson['data']['customeremail'];
+    
         _textCat.text = responceJson['data']['selectedcategory'];
         _textBudget.text = responceJson['data']['jobbudget'];
         _textTime.text = responceJson['data']['jobtime'];
@@ -93,6 +95,10 @@ class _NewRequestViewScreenSupplierState
 
   @override
   Widget build(BuildContext context) {
+
+    GenericClasses.WidgetScreen = SupplierNewRequestScreen();
+    GenericClasses.context = context;
+
     return WillPopScope(
       onWillPop: () {
         return Navigator.pushReplacement(
@@ -612,7 +618,7 @@ class _NewRequestViewScreenSupplierState
     ShowLoadingDialog.showAlertDialog(context);
     SharedPreferences pref = await SharedPreferences.getInstance();
     String userid = pref.get('userid');
-
+    ConstantsVariable.isTabIndexNew=false;
     print(userid);
     print(requestid);
     final response = await http.get(ApiUrls.BASE_API_URL +
@@ -686,6 +692,8 @@ class _NewRequestViewScreenSupplierState
           setState(() {
             titleText = 'ACCEPTED REQUEST';
             btnTittle='BACK';
+            _textPhone.text="";
+            _textEmail.text="";
           });
         }
         break;
@@ -694,6 +702,7 @@ class _NewRequestViewScreenSupplierState
       {
         setState(() {
           titleText = 'ACCEPTED REQUEST';
+
           btnTittle='BACK';
         });
       }

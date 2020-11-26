@@ -176,12 +176,18 @@ class _BuyCreditsScreenState extends State<BuyCreditsScreen> {
       String status = jsArray['message'];
 
       String merchant_id=jsArray['payfast_data']['merchant_id'];
+      String merchant_key=jsArray['payfast_data']['merchant_key'];
       String  return_url=jsArray['payfast_data']['return_url'];
       String   cancel_url=jsArray['payfast_data']['cancel_url'];
       String  notify_url=jsArray['payfast_data']['notify_url'];
       String   name_first=jsArray['payfast_data']['name_first'];
       String name_last=jsArray['payfast_data']['name_last'];
+
       String email_address=jsArray['payfast_data']['email_address'];
+
+
+      print('*email'+email_address.toString()+'');
+
       String  m_payment_id=jsArray['payfast_data']['m_payment_id'].toString();
       String   amount=jsArray['payfast_data']['amount'];
       String  item_name=jsArray['payfast_data']['item_name'];
@@ -192,7 +198,10 @@ class _BuyCreditsScreenState extends State<BuyCreditsScreen> {
       String    signature=jsArray['payfast_data']['signature'];
       print(status);
 
-      String url='https://shoutout.arcticapps.dev/admin/api/credit_webview?merchant_id=$merchant_id &return_url=$return_url&cancel_url=$cancel_url &notify_url=$notify_url &name_first=$name_first &name_last=$name_last &email_address=$email_address&m_payment_id=$m_payment_id&amount=$amount&item_name=$item_name&item_description=$item_description&custom_int1=$custom_int1&custom_int2=$custom_int2&payment_method=$payment_method&signature=$signature';
+      String url='https://shoutout.arcticapps.dev/admin/api/credit_webview?merchant_id=$merchant_id &merchant_key=$merchant_key &return_url=$return_url&cancel_url=$cancel_url &notify_url=$notify_url &name_first=$name_first &name_last=$name_last &email_address=$email_address&m_payment_id=$m_payment_id&amount=$amount&item_name=$item_name&item_description=$item_description&custom_int1=$custom_int1&custom_int2=$custom_int2&payment_method=$payment_method&signature=$signature';
+
+print("******"+url);
+
       showDialog(
           context: context,
           builder: (BuildContext context) {

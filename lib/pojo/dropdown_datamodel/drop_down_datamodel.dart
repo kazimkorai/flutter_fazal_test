@@ -1,31 +1,54 @@
-
 // To parse this JSON data, do
 //
 //     final welcome = welcomeFromJson(jsonString);
 
 import 'dart:convert';
 
-DropDownDataModel welcomeFromJson(String str) => DropDownDataModel.fromJson(json.decode(str));
+DropDownRegionModel welcomeFromJson(String str) => DropDownRegionModel.fromJson(json.decode(str));
 
-String welcomeToJson(DropDownDataModel data) => json.encode(data.toJson());
+String welcomeToJson(DropDownRegionModel data) => json.encode(data.toJson());
 
-class DropDownDataModel {
-  DropDownDataModel({
+class DropDownRegionModel {
+  DropDownRegionModel({
     this.status,
     this.region,
+    this.categories,
   });
 
   bool status;
   List<Region> region;
+  List<Category> categories;
 
-  factory DropDownDataModel.fromJson(Map<String, dynamic> json) => DropDownDataModel(
+  factory DropDownRegionModel.fromJson(Map<String, dynamic> json) => DropDownRegionModel(
     status: json["status"],
     region: List<Region>.from(json["region"].map((x) => Region.fromJson(x))),
+    categories: List<Category>.from(json["categories"].map((x) => Category.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
     "region": List<dynamic>.from(region.map((x) => x.toJson())),
+    "categories": List<dynamic>.from(categories.map((x) => x.toJson())),
+  };
+}
+
+class Category {
+  Category({
+    this.catId,
+    this.catName,
+  });
+
+  String catId;
+  String catName;
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+    catId: json["cat_id"],
+    catName: json["cat_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "cat_id": catId,
+    "cat_name": catName,
   };
 }
 

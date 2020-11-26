@@ -9,7 +9,7 @@ import 'package:flutter_fazal_test/const/ConstsVariable.dart';
 import 'package:flutter_fazal_test/utils/loading_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_fazal_test/CustomDialogs/CustomDialogs.dart';
 import 'package:flutter_fazal_test/pojo/login_datamodel/login_data_model.dart';
 import 'package:flutter_fazal_test/user_flow_screens/home_screen.dart';
 import 'package:flutter_fazal_test/user_login_screens_flow/splash_screen.dart';
@@ -21,7 +21,8 @@ import 'create_new_account.dart';
 import 'forget_password_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_fazal_test/shared_prefrence/my_sharedPrefrence.dart';
-
+import 'package:flutter_fazal_test/const/getx_variable.dart';
+import 'package:get/get.dart';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -29,7 +30,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
+  var controller=Get.put(GetXVariavleConteroller());
   final _formKey = GlobalKey<FormState>();
   var _textEmail = TextEditingController();
   var _textPassword = TextEditingController();
@@ -46,7 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void init() async {
     prefs = await SharedPreferences.getInstance();
     fetchCMS();
-
     Firebase.initializeApp();
   }
 
@@ -356,6 +356,10 @@ class _LoginScreenState extends State<LoginScreen> {
           margin: EdgeInsets.only(top: 20),
           child: InkWell(
             onTap: () {
+              controller.textPassword.value.clear();
+              controller.textEmail.value.clear();
+              controller.textName.value.clear();
+              controller.textEditingControllerPhone.value.clear();
               Navigator.pushReplacement(
                   context,
                   PageTransition(
@@ -416,7 +420,6 @@ class _LoginScreenState extends State<LoginScreen> {
         prefs.setString('terms',  responceJson['termsandcondition']['description']);
         prefs.setString('welcomevideo', responceJson['welcomevideo']['videourl']);
         prefs.setString('aboutvideo',responceJson['aboutus']['videourl']);
-
         ConstantsVariable.termsandcondition = prefs.getString('terms');
         ConstantsVariable.aboutUs = prefs.getString('about');
         ConstantsVariable.videourlWelcome = prefs.getString('welcomevideo');
@@ -450,16 +453,28 @@ class _LoginScreenState extends State<LoginScreen> {
       print(response.body);
       var jsArray = json.decode(response.body);
       String status = jsArray['message'];
-      Navigator.pop(context);
+
       if (status == 'No Record Found') {
         print('***status==>' + status);
         isErrorEmail = true;
         hintErrorEmail = 'Invalid email entered';
-        _textEmail.text = '';
+        //_textEmail.text = '';
         isErrorPassword = true;
         hintErrorPassword = 'Invalid password entered';
-        _textPassword.text = '';
+        //_textPassword.text = '';
+        Navigator.pop(context);
+
+
+        CustomDialogOneButton.showDialogs(
+            context,
+            "assets/images/img_warning_message_dialog.png",
+            "Login failed",
+            "invalid email or password",
+            "OK",
+            Container());
+
       } else if (status == 'Record Found') {
+
         LoginDataModel loginDataModel = LoginDataModel.fromJson(json.decode(response.body));
         print(loginDataModel.detail.userid);
         MySharedPrefrence.setLoginUserDataPrefrence(
@@ -477,6 +492,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ConstantsVariable.isSupplier=loginDataModel.detail.is_supplier;
         print('***loginisSupplier'+ConstantsVariable.isSupplier);
         print('***status==>' + status);
+        Navigator.pop(context);
         Navigator.pushReplacement(
             context,
             PageTransition(
@@ -484,4 +500,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
   }
+
+
 }

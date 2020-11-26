@@ -6,11 +6,12 @@ import 'package:flutter_fazal_test/user_flow_screens/push_notification_screen.da
 import 'package:flutter_fazal_test/utils/genericMethods.dart';
 import 'package:flutter_fazal_test/utils/page_transition.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-
+import 'package:flutter_fazal_test/const/getx_variable.dart';
 class UserTopMenuWithBack extends StatelessWidget implements PreferredSize {
   final double height = 80;
+  var controller=Get.put(GetXVariavleConteroller());
   @override
   Size get preferredSize => Size.fromHeight(height);
   @override
@@ -54,22 +55,48 @@ class UserTopMenuWithBack extends StatelessWidget implements PreferredSize {
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: PushNotificationScreen()));
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 0, right: 10),
-                    child: Icon(
-                      Icons.notifications,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                GetX<GetXVariavleConteroller>(
+                    builder: (controller) => Container(
+                      margin: EdgeInsets.only(top: 5),
+                      child:   Row(children: [InkWell(
+                        onTap: () {
+                          controller.notificationCount.clear();
+                          Navigator.pushReplacement(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.rightToLeft,
+                                  child: PushNotificationScreen()));
+                        },
+                        child:  new Stack(
+                          children: <Widget>[
+                            new Icon(Icons.notifications,color: Colors.white,),
+                            new Positioned(
+                              right: 0,
+                              child: new Container(
+                                padding: EdgeInsets.all(1),
+                                decoration: new BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 12,
+                                  minHeight: 12,
+                                ),
+                                child: new Text(
+                                  controller.getCount().toString(),
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+
+                      ),],),
+                    )),
               ],
             ),
             Container(
@@ -77,6 +104,7 @@ class UserTopMenuWithBack extends StatelessWidget implements PreferredSize {
               child: InkWell(
                 onTap: () {
                   print('I clicked');
+
                  return GenericClasses.gotoOtherpushReplacement(
                       GenericClasses.context, GenericClasses.WidgetScreen);
                 },

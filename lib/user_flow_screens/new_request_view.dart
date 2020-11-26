@@ -157,7 +157,7 @@ class _NewRequestViewScreenState extends State<NewRequestViewScreen> {
               margin: EdgeInsets.only(top: 15),
               alignment: Alignment.center,
               child: Text(
-                rating + ' Rating',
+                rating.toString() + ' Rating',
                 style: GoogleFonts.questrial(
                   color: HexColor('#2B748D'),
                   fontSize: 16,
@@ -591,6 +591,7 @@ class _NewRequestViewScreenState extends State<NewRequestViewScreen> {
                   onPressed: () async {
                     {
                       if (btnText == 'GIVE REVIEW') {
+
                         Navigator.pushReplacement(
                             context,
                             PageTransition(
@@ -606,6 +607,7 @@ class _NewRequestViewScreenState extends State<NewRequestViewScreen> {
                                 child: NewRequestForJob(requestid)));
                       }
                       if (btnText == 'AWARD JOB') {
+                        ConstantsVariable. isTabIndexNewForCust=false;
                         ShowLoadingDialog.showAlertDialog(context);
                         String myurl = ApiUrls.BASE_API_URL +
                             "awardjob?requestid=${requestid}&supplierid=${supplierid}";

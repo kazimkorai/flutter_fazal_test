@@ -21,11 +21,12 @@ import 'package:flutter_fazal_test/utils/user_top_menu_with_btnback.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:rating_bar/rating_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_fazal_test/utils/genericMethods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'home_screen.dart';
 
 class NewRequestForJob extends StatefulWidget {
   NewRequestForJob(this.requestid);
-
   final String requestid;
 
   @override
@@ -69,6 +70,17 @@ class _NewRequestForJobState extends State<NewRequestForJob> {
     print('new request for job');
     setState(() {
       isNewRequestSelected = true;
+      if(ConstantsVariable.isTabIndexNewForCust)
+      {
+        onPressedNewReq();
+      }
+      else
+      {
+        onPressedAcceptedReq();
+      }
+      setState(() {
+        // wisNewRequestSelected = true;
+      });
     });
   }
 
@@ -87,8 +99,26 @@ class _NewRequestForJobState extends State<NewRequestForJob> {
     }
   }
 
+  void onPressedNewReq () {
+    setState(() {
+      isNewRequestSelected = true;
+      getSelectedTabColor( isNewRequestSelected);
+      ConstantsVariable.isTabIndexNewForCust=true;
+    });
+  }
+  void onPressedAcceptedReq() {
+    setState(() {
+      isNewRequestSelected = false;
+      getSelectedTabColor( isNewRequestSelected);
+      ConstantsVariable.isTabIndexNewForCust=false;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    GenericClasses.WidgetScreen = InboxScreen();
+    GenericClasses.context = context;
     return WillPopScope(
       onWillPop: () {
         return Navigator.pushReplacement(
@@ -116,6 +146,7 @@ class _NewRequestForJobState extends State<NewRequestForJob> {
                             color: bgColorFirst,
                             onPressed: () {
                               setState(() {
+                                ConstantsVariable.isTabIndexNewForCust=true;
                                 isNewRequestSelected = true;
                                 getSelectedTabColor(isNewRequestSelected);
                               });
@@ -136,6 +167,7 @@ class _NewRequestForJobState extends State<NewRequestForJob> {
                             color: bgColorSecond,
                             onPressed: () {
                               setState(() {
+                                ConstantsVariable.isTabIndexNewForCust=false;
                                 isNewRequestSelected = false;
                                 getSelectedTabColor(isNewRequestSelected);
                               });
@@ -236,6 +268,7 @@ class _NewRequestForJobState extends State<NewRequestForJob> {
                                 {
                                   String supplierid = listNewReq[index]['supplierid'];
                                   String rating= listNewReq[index]['supplierrating'];
+
                                   print('I am Supplier'+supplierid);
                                   return Navigator.push(
                                       context,

@@ -8,6 +8,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fazal_test/apis/ApiUrls.dart';
+import 'package:flutter_fazal_test/const/ConstsVariable.dart';
+import 'package:flutter_fazal_test/const/controller_drop_down.dart';
 import 'package:flutter_fazal_test/user_flow_screens/single_establishment_screen.dart';
 import 'package:flutter_fazal_test/utils/dialog_custom.dart';
 import 'package:flutter_fazal_test/utils/genericMethods.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:hexcolor/hexcolor.dart';
@@ -39,6 +42,7 @@ class EditEstablishmentScreen extends StatefulWidget {
 }
 
 class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
+  var controllerEditProfile=Get.put(DropDownRegionController());
   var imageUri;
   final _formKey = GlobalKey<FormState>();
 
@@ -51,8 +55,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
   List<PlatformFile> imagesfilesList = List();
   List<PlatformFile> ImagesListFromUri = List();
   FilePickerResult Pickerresult;
-  List dropDownListRegion;
-  List dropDownListCat;
+
   String _mySelectionProvince;
   String _selectionCat;
   var firstAddress;
@@ -65,20 +68,18 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
   String city = '';
   TextEditingController _textAddress = TextEditingController();
 
-  Future fetchDropDown() async {
-    final response = await http.get(ApiUrls.BASE_API_URL + 'getdropdownapi');
-    var responceJson = json.decode(response.body);
-    if (responceJson['status']) {
-      dropDownListRegion = responceJson['region'];
-      dropDownListCat = responceJson['categories'];
-
-      print('*****REgion' + dropDownListRegion.toString());
-
-      return dropDownListRegion;
-    } else {
-      throw Exception('Failed to load album');
-    }
-  }
+  // Future fetchDropDown() async {
+  //   final response = await http.get(ApiUrls.BASE_API_URL + 'getdropdownapi');
+  //   var responceJson = json.decode(response.body);
+  //   if (responceJson['status']) {
+  //     ConstantsVariable.dropDownListRegionUpdateEstablish = responceJson['region'];
+  //     ConstantsVariable. dropDownListCatUpdateEstablish = responceJson['categories'];
+  //
+  //     return ConstantsVariable.dropDownListCatUpdateEstablish;
+  //   } else {
+  //     throw Exception('Failed to load album');
+  //   }
+  // }
 
   List<dynamic> listOfImagesFromUrl;
   List<dynamic> listOfBasicDetails;
@@ -152,7 +153,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
   @override
   void initState() {
     super.initState();
-    fetchDropDown();
+
   }
 
   @override
@@ -446,7 +447,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10))),
                                       child:
-                                          DropDownRegion(dropDownListRegion)),
+                                          DropDownRegion(ConstantsVariable.dropDownListRegionUpdateEstablish)),
                                   InkWell(
                                     onTap: () {
                                       googlePlacePicker();
@@ -528,7 +529,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                                           ),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10))),
-                                      child: DropDownCat(dropDownListCat)),
+                                      child: DropDownCat(ConstantsVariable.dropDownListCatUpdateEstablish)),
                                   Container(
                                     alignment: Alignment.topLeft,
                                     margin: EdgeInsets.only(left: 20, top: 25),

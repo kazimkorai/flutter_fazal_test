@@ -12,7 +12,7 @@ class ConstantsVariable {
   static String password;
   static String phone;
   static String email;
-  static int randomeOTPforForgotPass;
+  static String randomeOTPforForgotPass;
   static String idForSub;
   static String idForSingleEstablishment = '';
   static String randomOtpForCreateAccount;
@@ -34,4 +34,9 @@ class ConstantsVariable {
   static String credits='';
   static String isSupplier='';
   static String InboxTittle='Inbox';
+ static List dropDownListRegionUpdateEstablish;
+ static List dropDownListCatUpdateEstablish;
+ static bool isTabIndexNew=true;
+ static bool isTabIndexNewForCust=true;
+
 }
